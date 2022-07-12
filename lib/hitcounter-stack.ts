@@ -33,6 +33,13 @@ export class HitCounter extends Construct {
         HITS_TABLE_NAME: table.tableName,
       },
     });
+
+    // * Grant the lambda role/premission to read/write dynamodb table
+    table.grantReadWriteData(this.handler);
+
+    // * Grant the lambda role invoke premission to the downstream function
+    props.downstream.grantInvoke(this.handler);
   }
 }
+
 
