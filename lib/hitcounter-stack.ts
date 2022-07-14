@@ -6,8 +6,16 @@ import { Construct } from 'constructs';
 export interface HitCounterProps {
   /** Func to count url hits */
   downstream: lambda.IFunction;
-}
 
+  /**
+   * The read capacity units for the table
+   *
+   * Must be greater than 5 and lower than 20
+   *
+   * @default 5
+   */
+  readCapacity?: number;
+}
 
 export class HitCounter extends Construct {
   /** Allow accessing the counter function */
@@ -17,6 +25,12 @@ export class HitCounter extends Construct {
   public readonly table: dynamodb.Table;
 
   constructor(scope: Construct, id: string, props: HitCounterProps) {
+    if (
+      props.readCapacity !== undefined &&
+      (props.readCapacity < 5 || props.readCapacity > 20)
+    ) {
+      throw new Error('readCapacity must be greater than 5 and less than 20');
+    }
     super(scope, id);
 
     //  * Create dynamodb table
@@ -27,6 +41,7 @@ export class HitCounter extends Construct {
       },
       encryption: dynamodb.TableEncryption.AWS_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      readCapacity: props.readCapacity ?? 5,
     });
 
     this.table = table;
@@ -49,6 +64,13 @@ export class HitCounter extends Construct {
     props.downstream.grantInvoke(this.handler);
   }
 }
+
+
+
+
+
+
+
 
 
 

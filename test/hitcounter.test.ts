@@ -72,3 +72,20 @@ test('DynamoDB Table Created with Encryption', () => {
   });
 });
 
+// * Test 4
+test('Read capacity can be configured', () => {
+  const stack = new cdk.Stack();
+
+  expect(()=> {
+    new HitCounter(stack, 'MyTestFunction', {
+      downstream: new lambda.Function(stack, 'TestFunction', {
+        runtime: lambda.Runtime.NODEJS_14_X,
+        handler: 'hello.handler',
+        code: lambda.Code.fromAsset('lambda'),
+      }),
+      readCapacity: 2
+    });
+  })
+  .toThrowError(/readCapacity must be greater than 5 and less than 20/);
+
+});
