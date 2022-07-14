@@ -25,6 +25,7 @@ export class HitCounter extends Construct {
         name: 'path',
         type: dynamodb.AttributeType.STRING,
       },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     this.table = table;
@@ -47,6 +48,9 @@ export class HitCounter extends Construct {
     props.downstream.grantInvoke(this.handler);
   }
 }
+
+
+
 
 
 
