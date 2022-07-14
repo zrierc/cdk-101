@@ -8,9 +8,13 @@ export interface HitCounterProps {
   downstream: lambda.IFunction;
 }
 
+
 export class HitCounter extends Construct {
   /** Allow accessing the counter function */
   public readonly handler: lambda.Function;
+
+  /** THe hit counter table */
+  public readonly table: dynamodb.Table;
 
   constructor(scope: Construct, id: string, props: HitCounterProps) {
     super(scope, id);
@@ -22,6 +26,8 @@ export class HitCounter extends Construct {
         type: dynamodb.AttributeType.STRING,
       },
     });
+
+    this.table = table;
 
     // * create lambda function
     this.handler = new lambda.Function(this, 'HitCounterHandler', {
@@ -41,5 +47,8 @@ export class HitCounter extends Construct {
     props.downstream.grantInvoke(this.handler);
   }
 }
+
+
+
 
 
