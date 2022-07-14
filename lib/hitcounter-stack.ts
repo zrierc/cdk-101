@@ -25,6 +25,7 @@ export class HitCounter extends Construct {
         name: 'path',
         type: dynamodb.AttributeType.STRING,
       },
+      encryption: dynamodb.TableEncryption.AWS_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
@@ -48,6 +49,10 @@ export class HitCounter extends Construct {
     props.downstream.grantInvoke(this.handler);
   }
 }
+
+
+
+
 
 
 
